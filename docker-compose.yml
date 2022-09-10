@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+
+  nginx:
+    image: nginx:1.21.6-alpine
+    container_name: laravel-api-nginx
+    restart: always
+    ports:
+      - "3060:80"
+    volumes:
+      - ./:/var/www
+      - .docker/nginx:/etc/nginx/conf.d
+    networks:
+      app-network:
+
+  php:
+    build:
+      context: .docker/php
+      dockerfile: Dockerfile
+    container_name: laravel-api-php
+    volumes:
+      - ./:/var/www
+      - .docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      app-network:
+
+networks:
+  app-network:
+
+volumes:
+  app-data:
